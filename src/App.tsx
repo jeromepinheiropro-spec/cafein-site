@@ -266,7 +266,7 @@ function Manifesto() {
   const words = MANIFESTO.split(" ");
 
   return (
-    <section className="relative px-6 py-32 md:px-12 md:py-48">
+    <section className="relative px-6 py-20 md:px-12 md:py-32 md:py-48">
       <div className="mb-10 text-xs uppercase tracking-[0.3em] text-[#1FCE8A]">
         ( Le manifeste )
       </div>
@@ -368,7 +368,7 @@ function ServiceRow({
           </span>
           <div className="flex items-center gap-5 md:col-span-5">
             <Icon className="h-8 w-8 shrink-0 text-[#8FA39C] transition-colors duration-300 group-hover:text-[#0A1212]" />
-            <h3 className="font-display text-4xl uppercase leading-none text-[#F2F7F5] transition-colors duration-300 group-hover:text-[#0A1212] md:text-6xl">
+            <h3 className="font-display text-3xl uppercase leading-none text-[#F2F7F5] transition-colors duration-300 group-hover:text-[#0A1212] md:text-6xl">
               {title}
             </h3>
           </div>
@@ -426,7 +426,7 @@ function Stats() {
             delay={i * 0.08}
             className="border-b border-[#0A1212]/10 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"
           >
-            <div className="flex h-full flex-col justify-between gap-10 px-8 py-14">
+            <div className="flex h-full flex-col justify-between gap-8 px-6 py-10 md:px-8 md:py-14">
               <span className="font-display text-7xl leading-none md:text-8xl">
                 {s.counter ? <CountUp to={s.counter.to} suffix={s.counter.suffix} /> : s.big}
               </span>
@@ -462,7 +462,7 @@ const STEPS = [
 
 function Process() {
   return (
-    <section id="process" className="relative px-6 py-32 md:px-12">
+    <section id="process" className="relative px-6 py-20 md:px-12 md:py-32">
       <MaskedLine>
         <h2 className="font-display text-5xl uppercase text-[#F2F7F5] md:text-[7vw]">
           Comment ça marche
@@ -505,7 +505,7 @@ function Timeline() {
   });
 
   return (
-    <section className="border-y border-[#22302B] px-6 py-28 md:px-12">
+    <section className="border-y border-[#22302B] px-6 py-20 md:px-12 md:py-28">
       <div className="mb-4 text-xs uppercase tracking-[0.3em] text-[#1FCE8A]">
         ( Délai de livraison )
       </div>
@@ -541,7 +541,7 @@ function Timeline() {
 /* ================= WORK PREVIEW ================= */
 function Work() {
   return (
-    <section id="work" className="px-6 py-32 md:px-12">
+    <section id="work" className="px-6 py-20 md:px-12 md:py-32">
       <div className="grid gap-10 md:grid-cols-12">
         <div className="md:col-span-5">
           <MaskedLine>
@@ -653,7 +653,7 @@ function Results() {
   return (
     <section
       id="results"
-      className="relative overflow-hidden border-t border-[#22302B] px-6 py-32 md:px-12"
+      className="relative overflow-hidden border-t border-[#22302B] px-6 py-20 md:px-12 md:py-32"
     >
       <div
         aria-hidden
@@ -739,7 +739,7 @@ const WHY = [
 
 function Why() {
   return (
-    <section className="bg-[#F2F7F5] px-6 py-32 text-[#0A1212] md:px-12">
+    <section className="bg-[#F2F7F5] px-6 py-20 text-[#0A1212] md:px-12 md:py-32">
       <MaskedLine>
         <h2 className="font-display text-6xl uppercase md:text-[8vw]">Pourquoi Cafein ?</h2>
       </MaskedLine>
@@ -789,7 +789,7 @@ const POSTS = [
 
 function Blog() {
   return (
-    <section id="blog" className="px-6 py-32 md:px-12">
+    <section id="blog" className="px-6 py-20 md:px-12 md:py-32">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <MaskedLine>
           <h2 className="font-display text-5xl uppercase text-[#F2F7F5] md:text-7xl">
@@ -850,7 +850,7 @@ const FAQS = [
 function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section className="border-t border-[#22302B] px-6 py-32 md:px-12">
+    <section className="border-t border-[#22302B] px-6 py-20 md:px-12 md:py-32">
       <div className="grid gap-12 md:grid-cols-12">
         <div className="md:col-span-4">
           <MaskedLine>
@@ -905,7 +905,7 @@ function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-[#22302B] px-6 py-32 md:px-12"
+      className="relative overflow-hidden border-t border-[#22302B] px-6 py-20 md:px-12 md:py-32"
     >
       <Embers />
       <div className="relative grid gap-16 md:grid-cols-12">
