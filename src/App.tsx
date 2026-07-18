@@ -25,6 +25,7 @@ import {
   X,
 } from "lucide-react";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import Lenis from "lenis";
 import { Cursor, Magnetic, Reveal, MaskedLine, CountUp, Marquee, Embers } from "./fx";
 import Creation from "./pages/Creation";
 import SeoGeo from "./pages/SeoGeo";
@@ -1190,6 +1191,70 @@ function Home({ started }: { started: boolean }) {
   );
 }
 
+
+
+/* ================= DEFILEMENT FLUIDE (Lenis) ================= */
+function SmoothScroll() {
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (reduced) return;
+    // On garde le scroll natif sur tactile (stabilité iOS)
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1.05 });
+    let raf = 0;
+    const loop = (t: number) => {
+      lenis.raf(t);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+    };
+  }, [reduced]);
+  return null;
+}
+
+/* ================= TRANSITION DE PAGE (rideau) ================= */
+function RouteCurtain() {
+  const { pathname } = useLocation();
+  const [show, setShow] = useState(false);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    setShow(true);
+    const t = window.setTimeout(() => setShow(false), 600);
+    return () => clearTimeout(t);
+  }, [pathname]);
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: "0%" }}
+          exit={{ y: "-100%" }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="fixed inset-0 z-[150] flex items-center justify-center bg-[#1FCE8A]"
+        >
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.15, duration: 0.3 }}
+          >
+            <svg viewBox="0 0 30 41" className="h-14 w-auto" aria-hidden fill="none">
+              <path d="M0 0.558716V23.2477C0 27.7947 1.72257 32.2022 4.91942 35.4301C5.29187 35.8026 5.69536 36.1751 6.12989 36.5475C10.801 40.4739 15.9222 40.8153 17.443 40.8618V18.3902C17.443 14.2466 16.0308 10.2116 13.315 7.07675C13.1909 6.93707 13.0823 6.81292 12.9581 6.67325C8.0542 1.35019 1.62946 0.66735 0 0.558716Z" fill="#0A1212"/>
+              <path d="M29.92 7.71301V19.492C29.92 21.8509 29.0199 24.1477 27.375 25.8238C27.1732 26.0256 26.9715 26.2118 26.7542 26.398C24.3333 28.431 21.6796 28.6173 20.8882 28.6328V16.9779C20.8882 14.8363 21.6175 12.7257 23.0297 11.1117C23.0918 11.0341 23.1539 10.972 23.216 10.91C25.7455 8.11652 29.0665 7.77509 29.92 7.71301Z" fill="#0A1212"/>
+            </svg>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 /* ================= SCROLL MANAGER ================= */
 function ScrollManager() {
   const { pathname, hash } = useLocation();
@@ -1221,7 +1286,9 @@ export default function App() {
           style={{ scaleX: progress }}
         />
         <AnimatePresence>{loading && <Preloader onDone={() => setLoading(false)} />}</AnimatePresence>
+        <SmoothScroll />
         <ScrollManager />
+        <RouteCurtain />
         <Nav />
         <Routes>
           <Route path="/" element={<Home started={!loading} />} />

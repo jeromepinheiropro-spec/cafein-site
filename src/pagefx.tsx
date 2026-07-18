@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useVelocity, useSpring as useFmSpring, useTransform } from "framer-motion";
 import { ArrowUpRight, Plus, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Magnetic, Reveal, MaskedLine, Marquee } from "./fx";
@@ -61,8 +61,15 @@ export function Corners() {
 
 /* ---------- Marquee de titre géant ---------- */
 export function GiantMarquee({ word }: { word: string }) {
+  const { scrollY } = useScroll();
+  const velocity = useVelocity(scrollY);
+  const skew = useFmSpring(useTransform(velocity, [-1600, 1600], [6, -6]), {
+    stiffness: 120,
+    damping: 25,
+  });
   return (
     <section className="overflow-hidden border-t border-[#22302B] py-8 md:py-12">
+      <motion.div style={{ skewX: skew }}>
       <Marquee speed={30}>
         {Array.from({ length: 8 }).map((_, i) => (
           <span
@@ -74,6 +81,7 @@ export function GiantMarquee({ word }: { word: string }) {
           </span>
         ))}
       </Marquee>
+      </motion.div>
     </section>
   );
 }
