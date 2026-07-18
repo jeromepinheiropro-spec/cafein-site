@@ -6,6 +6,7 @@ import {
   useTransform,
   useSpring,
   useReducedMotion,
+  useMotionValueEvent,
   type MotionValue,
 } from "framer-motion";
 import {
@@ -162,7 +163,34 @@ function Hero({ started }: { started: boolean }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
-  const opacity = useTransform(scrollYProgress, [0, 0.32], [1, 0]);
+
+  // Fondu à verrou : une fois masqué, ne réapparaît qu'après un vrai retour en haut
+  // (les sauts de mesure iOS lors de la rétraction de la barre d'adresse sont ignorés)
+  const [hidden, setHidden] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const unhideTimer = useRef<number | null>(null);
+  useEffect(() => {
+    setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+  }, []);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (v > 0.22) {
+      if (unhideTimer.current) {
+        clearTimeout(unhideTimer.current);
+        unhideTimer.current = null;
+      }
+      setHidden(true);
+    } else if (v < 0.05) {
+      if (!unhideTimer.current) {
+        unhideTimer.current = window.setTimeout(() => {
+          unhideTimer.current = null;
+          setHidden(false);
+        }, 250);
+      }
+    } else if (unhideTimer.current) {
+      clearTimeout(unhideTimer.current);
+      unhideTimer.current = null;
+    }
+  });
 
   const letters = ["C", "a", "f", "e", "i", "n"];
 
@@ -170,7 +198,9 @@ function Hero({ started }: { started: boolean }) {
     <section ref={ref} id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
       <Embers />
       <motion.div
-        style={{ y, scale, opacity }}
+        style={isDesktop ? { y, scale } : undefined}
+        animate={{ opacity: hidden ? 0 : 1 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
         className="relative z-10 flex flex-1 flex-col justify-center px-6 pt-28 md:px-12"
       >
         <motion.div
