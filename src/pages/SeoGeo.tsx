@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, TrendingUp, Gauge, Quote } from "lucide-react";
-import { PageHero, OfferCard, FaqList, CtaBand, GiantMarquee, useTypewriter, useSeen } from "../pagefx";
+import { PageHero, OfferCard, FaqList, CtaBand, GiantMarquee, useTypewriter, useSeen, usePageMeta } from "../pagefx";
 import { Reveal, MaskedLine, CountUp } from "../fx";
 
 /* ============ Démo : recherche Google avec Cafein en tête ============ */
@@ -228,6 +228,10 @@ function RealisticTimeline() {
 
 /* ============ Page ============ */
 export default function SeoGeo() {
+  usePageMeta(
+    "SEO & GEO au Luxembourg — Google et IA génératives | Cafein",
+    "Référencement naturel sur Google et visibilité dans ChatGPT, Perplexity et Gemini. Cafein positionne votre entreprise là où vos clients cherchent."
+  );
   return (
     <main>
       <PageHero

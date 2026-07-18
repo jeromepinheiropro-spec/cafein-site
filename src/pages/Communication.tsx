@@ -9,7 +9,7 @@ import {
   Target,
   CalendarDays,
 } from "lucide-react";
-import { PageHero, FaqList, CtaBand, GiantMarquee, useSeen } from "../pagefx";
+import { PageHero, FaqList, CtaBand, GiantMarquee, useSeen, usePageMeta } from "../pagefx";
 import { Reveal, MaskedLine, Marquee } from "../fx";
 
 /* ============ Démo : feed social vivant ============ */
@@ -269,6 +269,10 @@ function WeekPlan() {
 
 /* ============ Page ============ */
 export default function Communication() {
+  usePageMeta(
+    "Communication digitale & social media au Luxembourg | Cafein",
+    "Stratégie social media, contenus, community management et publicité en ligne. Cafein gère votre communication digitale de A à Z au Luxembourg."
+  );
   return (
     <main>
       <PageHero

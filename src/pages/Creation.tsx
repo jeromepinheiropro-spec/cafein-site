@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer2 } from "lucide-react";
-import { PageHero, OfferCard, Checklist, Steps, FaqList, CtaBand, GiantMarquee, EASE, useSeen } from "../pagefx";
+import { PageHero, OfferCard, Checklist, Steps, FaqList, CtaBand, GiantMarquee, EASE, useSeen, usePageMeta } from "../pagefx";
 import { Reveal, MaskedLine, Marquee } from "../fx";
 
 /* ============ Démo : le site qui se construit tout seul ============ */
@@ -302,6 +302,10 @@ function Compare() {
 
 /* ============ Page ============ */
 export default function Creation() {
+  usePageMeta(
+    "Création de site web au Luxembourg — WordPress & sur mesure | Cafein",
+    "Sites vitrines, e-commerce et plateformes sur mesure, pensés pour convertir et être trouvés sur Google. Cafein, agence web au Luxembourg."
+  );
   return (
     <main>
       <PageHero
