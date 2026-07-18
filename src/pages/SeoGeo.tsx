@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Search, Sparkles, TrendingUp, Gauge, Quote } from "lucide-react";
 import { PageHero, OfferCard, FaqList, CtaBand, GiantMarquee, useTypewriter, useSeen, usePageMeta } from "../pagefx";
 import { Reveal, MaskedLine, CountUp } from "../fx";
@@ -11,6 +11,31 @@ const QUERIES = [
   "référencement seo luxembourg",
 ];
 
+function SearchResults() {
+  return (
+    <div className="space-y-3">
+      <div className="border border-[#1FCE8A] bg-[#0E1F1A] p-4">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#1FCE8A]">
+          <span className="bg-[#1FCE8A] px-1.5 py-0.5 font-bold text-[#0A1212]">1</span>
+          cafein.lu
+        </div>
+        <div className="mt-1 font-semibold text-[#F2F7F5]">
+          Cafein — Agence de marketing web au Luxembourg
+        </div>
+        <div className="text-sm text-[#8FA39C]">
+          Sites sur mesure, SEO & GEO, communication digitale…
+        </div>
+      </div>
+      {[2, 3].map((n) => (
+        <div key={n} className="border border-[#22302B] p-4 opacity-40">
+          <div className="h-3 w-1/3 bg-[#22302B]" />
+          <div className="mt-2 h-3 w-2/3 bg-[#22302B]" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function SearchDemo() {
   const { ref, seen } = useSeen();
   const { text, done } = useTypewriter(QUERIES, 60, 2400);
@@ -20,7 +45,7 @@ function SearchDemo() {
       <div className="border border-[#22302B] bg-[#101B18] p-5 md:p-7">
         <div className="flex items-center gap-3 border border-[#32423C] bg-[#0A1212] px-4 py-3">
           <Search className="h-4 w-4 shrink-0 text-[#8FA39C]" />
-          <span className="min-h-[1.5em] text-[#F2F7F5]">
+          <span className="min-h-[1.5em] min-w-0 flex-1 truncate whitespace-nowrap text-[#F2F7F5]">
             {seen ? text : ""}
             <motion.span
               animate={{ opacity: [1, 0] }}
@@ -29,36 +54,19 @@ function SearchDemo() {
             />
           </span>
         </div>
-        <div className="mt-4 min-h-[252px]">
-        <AnimatePresence>
-          {seen && done && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="space-y-3"
-            >
-              <div className="border border-[#1FCE8A] bg-[#0E1F1A] p-4">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#1FCE8A]">
-                  <span className="bg-[#1FCE8A] px-1.5 py-0.5 font-bold text-[#0A1212]">1</span>
-                  cafein.lu
-                </div>
-                <div className="mt-1 font-semibold text-[#F2F7F5]">
-                  Cafein — Agence de marketing web au Luxembourg
-                </div>
-                <div className="text-sm text-[#8FA39C]">
-                  Sites sur mesure, SEO & GEO, communication digitale…
-                </div>
-              </div>
-              {[2, 3].map((n) => (
-                <div key={n} className="border border-[#22302B] p-4 opacity-40">
-                  <div className="h-3 w-1/3 bg-[#22302B]" />
-                  <div className="mt-2 h-3 w-2/3 bg-[#22302B]" />
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Hauteur verrouillée : le fantôme invisible réserve exactement la place finale,
+            l'animation se joue en absolu par-dessus → zéro décalage de page. */}
+        <div className="relative mt-4">
+          <div className="invisible" aria-hidden>
+            <SearchResults />
+          </div>
+          <motion.div
+            animate={{ opacity: seen && done ? 1 : 0, y: seen && done ? 0 : 10 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0"
+          >
+            <SearchResults />
+          </motion.div>
         </div>
       </div>
     </div>
@@ -116,47 +124,66 @@ function AiChatDemo() {
         <div className="ml-auto max-w-[85%] border border-[#32423C] bg-[#0A1212] px-4 py-3 text-sm text-[#F2F7F5]">
           Quelle agence web recommandes-tu au Luxembourg ?
         </div>
-        <div className="min-h-[11.5rem] max-w-[92%]">
-          {phase === 1 && (
-            <div className="inline-flex gap-1.5 border border-[#22302B] px-4 py-3">
-              {[0, 1, 2].map((i) => (
-                <motion.span
-                  key={i}
-                  animate={{ opacity: [0.2, 1, 0.2] }}
-                  transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-                  className="h-1.5 w-1.5 rounded-full bg-[#8FA39C]"
-                />
-              ))}
+        {/* Hauteur verrouillée : fantôme invisible de la réponse complète + chips,
+            le contenu animé est en absolu par-dessus → zéro décalage de page. */}
+        <div className="relative max-w-[92%]">
+          <div className="invisible" aria-hidden>
+            <div className="border border-[#22302B] px-4 py-3 text-sm leading-relaxed">
+              {AI_ANSWER}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {["ChatGPT", "Perplexity", "Gemini"].map((s) => (
+                  <span
+                    key={s}
+                    className="flex items-center gap-1 border px-2 py-1 text-[10px] uppercase tracking-widest"
+                  >
+                    <Quote className="h-3 w-3" /> {s}
+                  </span>
+                ))}
+              </div>
             </div>
-          )}
-          {phase === 2 && (
-            <div className="border border-[#22302B] px-4 py-3 text-sm leading-relaxed text-[#8FA39C]">
-              {parts.map((p, i) => (
-                <span key={i}>
-                  {p}
-                  {i < parts.length - 1 && (
-                    <span className="bg-[#1FCE8A] px-1 font-bold text-[#0A1212]">Cafein</span>
-                  )}
-                </span>
-              ))}
-              {chars >= AI_ANSWER.length && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-3 flex flex-wrap gap-2"
-                >
-                  {["ChatGPT", "Perplexity", "Gemini"].map((s) => (
-                    <span
-                      key={s}
-                      className="flex items-center gap-1 border border-[#32423C] px-2 py-1 text-[10px] uppercase tracking-widest text-[#F2F7F5]"
-                    >
-                      <Quote className="h-3 w-3 text-[#1FCE8A]" /> {s}
-                    </span>
-                  ))}
-                </motion.div>
-              )}
-            </div>
-          )}
+          </div>
+          <div className="absolute inset-0">
+            {phase === 1 && (
+              <div className="inline-flex gap-1.5 border border-[#22302B] px-4 py-3">
+                {[0, 1, 2].map((i) => (
+                  <motion.span
+                    key={i}
+                    animate={{ opacity: [0.2, 1, 0.2] }}
+                    transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+                    className="h-1.5 w-1.5 rounded-full bg-[#8FA39C]"
+                  />
+                ))}
+              </div>
+            )}
+            {phase === 2 && (
+              <div className="border border-[#22302B] px-4 py-3 text-sm leading-relaxed text-[#8FA39C]">
+                {parts.map((p, i) => (
+                  <span key={i}>
+                    {p}
+                    {i < parts.length - 1 && (
+                      <span className="bg-[#1FCE8A] px-1 font-bold text-[#0A1212]">Cafein</span>
+                    )}
+                  </span>
+                ))}
+                {chars >= AI_ANSWER.length && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-3 flex flex-wrap gap-2"
+                  >
+                    {["ChatGPT", "Perplexity", "Gemini"].map((s) => (
+                      <span
+                        key={s}
+                        className="flex items-center gap-1 border border-[#32423C] px-2 py-1 text-[10px] uppercase tracking-widest text-[#F2F7F5]"
+                      >
+                        <Quote className="h-3 w-3 text-[#1FCE8A]" /> {s}
+                      </span>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
