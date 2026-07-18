@@ -6,49 +6,89 @@ import { Magnetic, Reveal, MaskedLine } from "./fx";
 
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
+
+/* ---------- Halos lumineux animés ---------- */
+export function Glow({ variant = 0 }: { variant?: number }) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <motion.div
+        animate={{ x: [0, 60, -40, 0], y: [0, -50, 30, 0], scale: [1, 1.15, 0.95, 1] }}
+        transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }}
+        className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#1FCE8A]/[0.14] blur-[110px]"
+      />
+      <motion.div
+        animate={{ x: [0, -70, 40, 0], y: [0, 40, -40, 0] }}
+        transition={{ repeat: Infinity, duration: 22, ease: "easeInOut", delay: variant }}
+        className="absolute right-[-140px] top-1/4 h-[380px] w-[380px] rounded-full bg-[#0A9A62]/[0.13] blur-[100px]"
+      />
+      <motion.div
+        animate={{ x: [0, 50, -30, 0], y: [0, -30, 50, 0] }}
+        transition={{ repeat: Infinity, duration: 26, ease: "easeInOut", delay: variant * 2 }}
+        className="absolute bottom-[-160px] left-1/3 h-[360px] w-[360px] rounded-full bg-[#F2F7F5]/[0.05] blur-[120px]"
+      />
+    </div>
+  );
+}
+
 /* ---------- Page hero (shared) ---------- */
 export function PageHero({
   label,
   title,
   intro,
+  watermark,
   children,
 }: {
   label: string;
   title: React.ReactNode;
   intro: string;
+  watermark?: string;
   children?: React.ReactNode;
 }) {
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-44">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE }}
-        className="text-xs uppercase tracking-[0.3em] text-[#1FCE8A]"
-      >
-        ( {label} )
-      </motion.div>
-      <h1 className="mt-6 max-w-5xl text-4xl font-semibold leading-[1.05] tracking-tight text-[#F2F7F5] md:text-7xl">
-        <span className="block overflow-hidden">
-          <motion.span
-            className="block"
-            initial={{ y: "110%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
-          >
-            {title}
-          </motion.span>
-        </span>
-      </h1>
-      <motion.p
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.25, ease: EASE }}
-        className="mt-8 max-w-2xl text-lg leading-relaxed text-[#8FA39C] md:text-xl"
-      >
-        {intro}
-      </motion.p>
-      {children}
+      <Glow />
+      {watermark && (
+        <motion.div
+          initial={{ opacity: 0, x: 80 }}
+          animate={{ opacity: 0.7, x: 0 }}
+          transition={{ duration: 1.4, ease: EASE }}
+          className="font-display text-stroke pointer-events-none absolute -right-8 top-20 hidden select-none text-[15vw] uppercase leading-none md:block"
+        >
+          {watermark}
+        </motion.div>
+      )}
+      <div className="relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-[#1FCE8A]"
+        >
+          <span className="h-[2px] w-10 bg-[#1FCE8A]" />
+          {label}
+        </motion.div>
+        <h1 className="font-display mt-8 max-w-5xl text-5xl uppercase leading-[0.95] text-[#F2F7F5] md:text-[6.5vw]">
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block"
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
+            >
+              {title}
+            </motion.span>
+          </span>
+        </h1>
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+          className="mt-8 max-w-2xl text-lg leading-relaxed text-[#8FA39C] md:text-xl"
+        >
+          {intro}
+        </motion.p>
+        {children}
+      </div>
     </section>
   );
 }
@@ -219,6 +259,7 @@ export function FaqList({ faqs }: { faqs: { q: string; a: string }[] }) {
 export function CtaBand({ title, sub, button }: { title: string; sub: string; button: string }) {
   return (
     <section className="relative overflow-hidden border-t border-[#22302B] px-6 py-20 text-center md:px-12 md:py-32">
+      <Glow variant={2} />
       <Reveal>
         <h2 className="font-display mx-auto max-w-4xl text-4xl uppercase leading-tight text-[#F2F7F5] md:text-6xl">
           {title}
