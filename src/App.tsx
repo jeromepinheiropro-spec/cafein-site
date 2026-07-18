@@ -140,7 +140,6 @@ const NAV_LINKS = [
   { to: "/creation-site-web", label: "Création de site" },
   { to: "/seo-geo", label: "SEO & GEO" },
   { to: "/communication", label: "Communication" },
-  { to: "/lexique", label: "Lexique" },
 ];
 
 function Nav() {
@@ -1152,12 +1151,17 @@ function Footer() {
           <Link to="/communication" className="transition-colors hover:text-[#1FCE8A]">
             Communication
           </Link>
-          <Link to="/lexique" className="transition-colors hover:text-[#1FCE8A]">
-            Lexique
-          </Link>
           <Link to="/#contact" className="transition-colors hover:text-[#1FCE8A]">
             Contact
           </Link>
+          <span className="flex items-center gap-x-5 text-[10px] tracking-[0.25em] text-[#8FA39C]/60">
+            <Link to="/#blog" className="transition-colors hover:text-[#1FCE8A]">
+              Blog
+            </Link>
+            <Link to="/lexique" className="transition-colors hover:text-[#1FCE8A]">
+              Lexique
+            </Link>
+          </span>
         </div>
         <span>FR / EN</span>
       </div>
