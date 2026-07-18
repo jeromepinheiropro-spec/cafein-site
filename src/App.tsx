@@ -109,7 +109,8 @@ function Preloader({ onDone }: { onDone: () => void }) {
         <span>Luxembourg</span>
       </div>
       <div className="overflow-hidden">
-        <motion.h1
+        <motion.div
+          aria-hidden
           className="text-[17vw] leading-[0.9] tracking-tight text-[#F2F7F5] md:text-[12vw]"
           style={{ fontFamily: "Poppins, sans-serif", fontWeight: 500 }}
           initial={{ y: "100%" }}
@@ -117,7 +118,7 @@ function Preloader({ onDone }: { onDone: () => void }) {
           transition={{ duration: 0.9, ease: EASE }}
         >
           Cafe<IDot />n
-        </motion.h1>
+        </motion.div>
       </div>
       <div className="flex items-end justify-between">
         <span className="text-xs uppercase tracking-[0.3em] text-[#8FA39C]">
@@ -314,8 +315,11 @@ function Hero({ started }: { started: boolean }) {
         <h1
           className="flex flex-wrap leading-[0.82] tracking-tight text-[#F2F7F5]"
           style={{ fontFamily: "Poppins, sans-serif", fontWeight: 500 }}
-          aria-label="Cafein"
         >
+          <span className="sr-only">
+            Cafein — agence de communication digitale au Luxembourg : création de sites web,
+            SEO & GEO, social media
+          </span>
           {letters.map((l, i) => (
             <span key={i} className="inline-block overflow-hidden" aria-hidden>
               <motion.span
