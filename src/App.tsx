@@ -160,9 +160,9 @@ function Nav() {
 function Hero({ started }: { started: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
+  const opacity = useTransform(scrollYProgress, [0, 0.32], [1, 0]);
 
   const letters = ["C", "a", "f", "e", "i", "n"];
 
@@ -519,14 +519,14 @@ function Timeline() {
         <div className="relative h-[2px] w-full bg-[#22302B]">
           <motion.div style={{ width }} className="absolute inset-y-0 left-0 bg-[#1FCE8A]" />
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8">
           {PHASES.map((p, i) => (
             <Reveal key={p} delay={i * 0.12}>
               <div>
                 <div className="text-[10px] uppercase tracking-[0.3em] text-[#8FA39C]">
                   Sem. {i + 1}
                 </div>
-                <div className="font-display mt-2 text-2xl uppercase text-[#F2F7F5] md:text-3xl">
+                <div className="font-display mt-2 break-words text-2xl uppercase leading-tight text-[#F2F7F5] md:text-3xl">
                   {p}
                 </div>
               </div>
@@ -657,7 +657,7 @@ function Results() {
     >
       <div
         aria-hidden
-        className="font-display text-stroke pointer-events-none absolute -right-10 top-0 select-none text-[28vw] leading-none"
+        className="font-display text-stroke pointer-events-none absolute -right-10 top-0 hidden select-none text-[28vw] leading-none md:block"
       >
         240
       </div>
