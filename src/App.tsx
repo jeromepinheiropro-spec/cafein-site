@@ -30,6 +30,9 @@ import { Cursor, Magnetic, Reveal, MaskedLine, CountUp, Marquee, Embers } from "
 import Creation from "./pages/Creation";
 import SeoGeo from "./pages/SeoGeo";
 import Communication from "./pages/Communication";
+import Lexique from "./pages/Lexique";
+import LexiqueTerme from "./pages/LexiqueTerme";
+import { usePageMeta } from "./pagefx";
 import { useEffect } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -137,6 +140,7 @@ const NAV_LINKS = [
   { to: "/creation-site-web", label: "Création de site" },
   { to: "/seo-geo", label: "SEO & GEO" },
   { to: "/communication", label: "Communication" },
+  { to: "/lexique", label: "Lexique" },
 ];
 
 function Nav() {
@@ -1148,6 +1152,9 @@ function Footer() {
           <Link to="/communication" className="transition-colors hover:text-[#1FCE8A]">
             Communication
           </Link>
+          <Link to="/lexique" className="transition-colors hover:text-[#1FCE8A]">
+            Lexique
+          </Link>
           <Link to="/#contact" className="transition-colors hover:text-[#1FCE8A]">
             Contact
           </Link>
@@ -1173,6 +1180,10 @@ function Footer() {
 
 /* ================= HOME ================= */
 function Home({ started }: { started: boolean }) {
+  usePageMeta(
+    "Cafein — Agence de communication digitale au Luxembourg",
+    "Création de sites web, SEO & GEO, communication digitale : Cafein rend votre entreprise visible sur Google, les réseaux sociaux et les IA génératives."
+  );
   return (
     <main>
       <Hero started={started} />
@@ -1295,6 +1306,8 @@ export default function App() {
           <Route path="/creation-site-web" element={<Creation />} />
           <Route path="/seo-geo" element={<SeoGeo />} />
           <Route path="/communication" element={<Communication />} />
+          <Route path="/lexique" element={<Lexique />} />
+          <Route path="/lexique/:slug" element={<LexiqueTerme />} />
           <Route path="*" element={<Home started={!loading} />} />
         </Routes>
         <Footer />

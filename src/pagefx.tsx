@@ -429,3 +429,17 @@ export function useSeen(margin = "-80px") {
   const seen = useInView(ref, { once: true, margin: margin as never });
   return { ref, seen };
 }
+
+/* ---------- Meta par page (SEO) ---------- */
+export function usePageMeta(title: string, description: string) {
+  useEffect(() => {
+    document.title = title;
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "description";
+      document.head.appendChild(meta);
+    }
+    meta.content = description;
+  }, [title, description]);
+}
