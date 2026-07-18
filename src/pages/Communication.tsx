@@ -104,7 +104,6 @@ function PhoneDemo() {
               <img
                 src={post.img}
                 alt=""
-                loading="lazy"
                 className="mt-3 h-28 w-full object-cover"
               />
               <div className="mt-3 flex items-center gap-5 text-[#8FA39C]">
@@ -162,7 +161,7 @@ function SocialGallery() {
               (i % 2 ? "rotate-[1.5deg]" : "-rotate-[1.5deg]")
             }
           >
-            <img src={g.img} alt={g.tag} loading="lazy" className="h-40 w-full object-cover md:h-52" />
+            <img src={g.img} alt={g.tag} className="h-40 w-full object-cover md:h-52" />
             <div className="absolute bottom-0 left-0 bg-[#0A1212]/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#1FCE8A]">
               {g.tag}
             </div>

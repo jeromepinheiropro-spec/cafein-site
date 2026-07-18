@@ -179,7 +179,7 @@ function SiteTypes() {
                 <img
                   src={st.img}
                   alt={st.t}
-                  loading="lazy"
+                 
                   className="h-56 w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 md:h-64"
                 />
               </div>
