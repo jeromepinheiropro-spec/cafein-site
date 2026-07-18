@@ -14,9 +14,24 @@ import { Reveal, MaskedLine, Marquee } from "../fx";
 
 /* ============ Démo : feed social vivant ============ */
 const POSTS = [
-  { author: "Cafein · Agence", text: "Nouveau site en ligne pour un client luxembourgeois 🚀 propre, rapide, efficace.", likes: 128 },
-  { author: "Cafein · Agence", text: "3 conseils pour une marque qui rayonne sur LinkedIn — thread de la semaine.", likes: 96 },
-  { author: "Cafein · Agence", text: "Campagne locale : +212% de portée en un mois pour un commerce de la Grande Région.", likes: 154 },
+  {
+    author: "Cafein · Agence",
+    text: "Nouveau site en ligne pour un client luxembourgeois — propre, rapide, efficace.",
+    likes: 128,
+    img: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    author: "Cafein · Agence",
+    text: "3 conseils pour une marque qui rayonne sur LinkedIn — thread de la semaine.",
+    likes: 96,
+    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=80",
+  },
+  {
+    author: "Cafein · Agence",
+    text: "Campagne locale : +212% de portée en un mois pour un commerce de la Grande Région.",
+    likes: 154,
+    img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=700&q=80",
+  },
 ];
 
 function PhoneDemo() {
@@ -86,7 +101,12 @@ function PhoneDemo() {
                 </div>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-[#F2F7F5]">{post.text}</p>
-              <div className="mt-3 h-24 bg-gradient-to-br from-[#16352A] to-transparent" />
+              <img
+                src={post.img}
+                alt=""
+                loading="lazy"
+                className="mt-3 h-28 w-full object-cover"
+              />
               <div className="mt-3 flex items-center gap-5 text-[#8FA39C]">
                 <motion.span
                   animate={liked ? { scale: [1, 1.5, 1] } : {}}
@@ -116,6 +136,40 @@ function PhoneDemo() {
         </div>
       </div>
     </div>
+  );
+}
+
+
+/* ============ Galerie sociale défilante ============ */
+const GALLERY = [
+  { img: "https://images.unsplash.com/photo-1611926653458-09294b3142bf?auto=format&fit=crop&w=600&q=80", tag: "Social media" },
+  { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80", tag: "Reporting" },
+  { img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=80", tag: "Stratégie" },
+  { img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=600&q=80", tag: "Équipe" },
+  { img: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600&q=80", tag: "Production" },
+  { img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80", tag: "Contenus" },
+];
+
+function SocialGallery() {
+  return (
+    <section className="overflow-hidden border-y border-[#22302B] py-12 md:py-16">
+      <Marquee speed={38}>
+        {GALLERY.map((g, i) => (
+          <div
+            key={g.tag + i}
+            className={
+              "relative mx-3 inline-block w-56 shrink-0 overflow-hidden border border-[#22302B] md:w-72 " +
+              (i % 2 ? "rotate-[1.5deg]" : "-rotate-[1.5deg]")
+            }
+          >
+            <img src={g.img} alt={g.tag} loading="lazy" className="h-40 w-full object-cover md:h-52" />
+            <div className="absolute bottom-0 left-0 bg-[#0A1212]/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#1FCE8A]">
+              {g.tag}
+            </div>
+          </div>
+        ))}
+      </Marquee>
+    </section>
   );
 }
 
@@ -220,6 +274,7 @@ export default function Communication() {
     <main>
       <PageHero
         label="Communication digitale"
+        watermark="Social"
         title={
           <>
             Une marque qui <span className="text-[#1FCE8A]">rayonne</span> sur tous les canaux
@@ -245,6 +300,7 @@ export default function Communication() {
       </Marquee>
 
       <ServicesGrid />
+      <SocialGallery />
       <WeekPlan />
 
       <FaqList

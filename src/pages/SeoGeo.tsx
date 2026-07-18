@@ -230,6 +230,7 @@ export default function SeoGeo() {
     <main>
       <PageHero
         label="SEO & GEO"
+        watermark="Rank #1"
         title={
           <>
             Être trouvé, par Google <span className="text-[#1FCE8A]">comme par les IA</span>

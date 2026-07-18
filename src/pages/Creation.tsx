@@ -143,6 +143,66 @@ function BuildDemo() {
   );
 }
 
+
+/* ============ Types de sites — vitrine photo ============ */
+const SITE_TYPES = [
+  {
+    img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+    t: "Site vitrine",
+    d: "Restaurants, cabinets, artisans : votre activité présentée avec soin.",
+  },
+  {
+    img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+    t: "E-commerce",
+    d: "Vendez en ligne avec une boutique rapide et rassurante.",
+  },
+  {
+    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    t: "Plateforme",
+    d: "SaaS, portails métier, outils internes : du sur mesure qui scale.",
+  },
+];
+
+function SiteTypes() {
+  return (
+    <section className="px-6 py-16 md:px-12 md:py-24">
+      <MaskedLine>
+        <h2 className="font-display text-3xl uppercase text-[#F2F7F5] md:text-5xl">
+          Pour chaque type de projet
+        </h2>
+      </MaskedLine>
+      <div className="mt-12 grid gap-6 md:grid-cols-3">
+        {SITE_TYPES.map((st, i) => (
+          <Reveal key={st.t} delay={i * 0.1}>
+            <div className="group relative overflow-hidden border border-[#22302B]" data-hover>
+              <div className="overflow-hidden">
+                <img
+                  src={st.img}
+                  alt={st.t}
+                  loading="lazy"
+                  className="h-56 w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 md:h-64"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A1212] via-[#0A1212]/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <span className="font-display text-2xl uppercase text-[#F2F7F5] md:text-3xl">
+                  {st.t}
+                </span>
+                <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#8FA39C] opacity-0 transition-all duration-500 group-hover:opacity-100">
+                  {st.d}
+                </p>
+              </div>
+              <span className="absolute right-4 top-4 bg-[#1FCE8A] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0A1212] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                0{i + 1}
+              </span>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* ============ Comparatif animé ============ */
 const COMPARE = [
   { c: "Budget", w: "Plus accessible", s: "Plus élevé" },
@@ -187,6 +247,7 @@ export default function Creation() {
     <main>
       <PageHero
         label="Création de site web"
+        watermark="Sites"
         title={
           <>
             Un site qui vous ressemble,{" "}
@@ -213,7 +274,9 @@ export default function Creation() {
         ))}
       </Marquee>
 
-      <section className="px-6 py-16 md:px-12 md:py-24">
+      <SiteTypes />
+
+      <section className="border-t border-[#22302B] px-6 py-16 md:px-12 md:py-24">
         <div className="grid gap-6 lg:grid-cols-2">
           <OfferCard
             tag="Rapide à lancer"
