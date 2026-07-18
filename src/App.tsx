@@ -1212,6 +1212,7 @@ function SmoothScroll() {
     // On garde le scroll natif sur tactile (stabilité iOS)
     if (window.matchMedia("(pointer: coarse)").matches) return;
     const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1.05 });
+    (window as never as { __lenis?: Lenis }).__lenis = lenis;
     let raf = 0;
     const loop = (t: number) => {
       lenis.raf(t);
@@ -1221,6 +1222,7 @@ function SmoothScroll() {
     return () => {
       cancelAnimationFrame(raf);
       lenis.destroy();
+      delete (window as never as { __lenis?: Lenis }).__lenis;
     };
   }, [reduced]);
   return null;
@@ -1270,13 +1272,18 @@ function RouteCurtain() {
 function ScrollManager() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
+    const lenis = (window as never as { __lenis?: Lenis }).__lenis;
     if (hash) {
       const el = document.querySelector(hash);
       if (el) {
-        window.setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 80);
+        window.setTimeout(() => {
+          if (lenis) lenis.scrollTo(el as HTMLElement);
+          else el.scrollIntoView({ behavior: "smooth" });
+        }, 80);
         return;
       }
     }
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     window.scrollTo(0, 0);
   }, [pathname, hash]);
   return null;
