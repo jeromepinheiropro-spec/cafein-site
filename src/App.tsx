@@ -21,8 +21,14 @@ import {
   UserRound,
   Zap,
   Megaphone,
+  Menu,
+  X,
 } from "lucide-react";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { Cursor, Magnetic, Reveal, MaskedLine, CountUp, Marquee, Embers } from "./fx";
+import Creation from "./pages/Creation";
+import SeoGeo from "./pages/SeoGeo";
+import Communication from "./pages/Communication";
 import { useEffect } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -126,34 +132,122 @@ function Preloader({ onDone }: { onDone: () => void }) {
 }
 
 /* ================= NAV ================= */
+const NAV_LINKS = [
+  { to: "/creation-site-web", label: "Création de site" },
+  { to: "/seo-geo", label: "SEO & GEO" },
+  { to: "/communication", label: "Communication" },
+];
+
 function Nav() {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => setOpen(false), [location.pathname]);
+
   return (
-    <motion.header
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-      className="fixed inset-x-0 top-0 z-[80] mix-blend-difference"
-    >
-      <nav className="flex items-center justify-between px-6 py-5 md:px-12">
-        <a href="#top" aria-label="Cafein — accueil">
-          <Logo className="h-7" />
-        </a>
-        <div className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.25em] text-[#F2F7F5] md:flex">
-          <a href="#services" className="transition-opacity hover:opacity-60">Services</a>
-          <a href="#process" className="transition-opacity hover:opacity-60">Méthode</a>
-          <a href="#results" className="transition-opacity hover:opacity-60">Résultats</a>
-          <a href="#blog" className="transition-opacity hover:opacity-60">Blog</a>
-        </div>
-        <Magnetic>
-          <a
-            href="#contact"
-            className="border border-[#F2F7F5] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.25em] text-[#F2F7F5] transition-colors duration-300 hover:bg-[#F2F7F5] hover:text-black"
+    <>
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+        className="fixed inset-x-0 top-0 z-[80] mix-blend-difference"
+      >
+        <nav className="flex items-center justify-between px-6 py-5 md:px-12">
+          <Link to="/" aria-label="Cafein — accueil">
+            <Logo className="h-7" />
+          </Link>
+          <div className="hidden items-center gap-8 text-xs font-medium uppercase tracking-[0.25em] text-[#F2F7F5] md:flex">
+            {NAV_LINKS.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className={
+                  "transition-opacity hover:opacity-60 " +
+                  (location.pathname === l.to ? "text-[#1FCE8A]" : "")
+                }
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center gap-3">
+            <Magnetic className="hidden md:inline-block">
+              <Link
+                to="/#contact"
+                className="border border-[#F2F7F5] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.25em] text-[#F2F7F5] transition-colors duration-300 hover:bg-[#F2F7F5] hover:text-black"
+              >
+                Contact
+              </Link>
+            </Magnetic>
+            <button
+              onClick={() => setOpen(true)}
+              aria-label="Ouvrir le menu"
+              className="p-2 text-[#F2F7F5] md:hidden"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
+        </nav>
+      </motion.header>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[110] flex flex-col bg-[#0A1212] px-6 py-6"
           >
-            Contact
-          </a>
-        </Magnetic>
-      </nav>
-    </motion.header>
+            <div className="flex items-center justify-between">
+              <Logo className="h-6" />
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Fermer le menu"
+                className="p-2 text-[#F2F7F5]"
+              >
+                <X className="h-7 w-7" />
+              </button>
+            </div>
+            <nav className="mt-16 flex flex-col gap-2">
+              {[{ to: "/", label: "Accueil" }, ...NAV_LINKS].map((l, i) => (
+                <motion.div
+                  key={l.to}
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.08 + i * 0.07, duration: 0.5, ease: EASE }}
+                >
+                  <Link
+                    to={l.to}
+                    className={
+                      "font-display block py-3 text-4xl uppercase " +
+                      (location.pathname === l.to ? "text-[#1FCE8A]" : "text-[#F2F7F5]")
+                    }
+                  >
+                    {l.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.45 }}
+              className="mt-auto"
+            >
+              <Link
+                to="/#contact"
+                onClick={() => setOpen(false)}
+                className="inline-flex w-full items-center justify-center gap-3 bg-[#1FCE8A] px-8 py-5 text-sm font-bold uppercase tracking-[0.25em] text-[#0A1212]"
+              >
+                Parlons de votre projet
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -341,6 +435,7 @@ const SERVICES = [
     desc: "WordPress ou développement sur mesure, selon vos besoins et votre budget : vitrine, e-commerce ou plateforme spécifique, pensés pour le marché luxembourgeois.",
     tags: ["Vitrine", "E-commerce", "Sur mesure", "WordPress"],
     Icon: Globe,
+    to: "/creation-site-web",
   },
   {
     n: "02",
@@ -348,6 +443,7 @@ const SERVICES = [
     desc: "Référencement naturel classique et optimisation pour être trouvé et cité par les intelligences artificielles (ChatGPT, Perplexity...), avec un focus local Luxembourg.",
     tags: ["SEO local", "GEO", "ChatGPT", "Perplexity"],
     Icon: Search,
+    to: "/seo-geo",
   },
   {
     n: "03",
@@ -355,6 +451,7 @@ const SERVICES = [
     desc: "Stratégie, réseaux sociaux, contenus et campagnes : on gère votre communication digitale de A à Z pour faire rayonner votre marque au Luxembourg.",
     tags: ["Social media", "Contenus", "Campagnes", "Stratégie"],
     Icon: Megaphone,
+    to: "/communication",
   },
 ];
 
@@ -383,12 +480,13 @@ function ServiceRow({
   desc,
   tags,
   Icon,
+  to,
   delay,
 }: (typeof SERVICES)[number] & { delay: number }) {
   return (
     <Reveal delay={delay}>
-      <a
-        href="#contact"
+      <Link
+        to={to}
         className="group relative block overflow-hidden border-t border-[#22302B]"
       >
         <div className="absolute inset-0 origin-bottom scale-y-0 bg-[#1FCE8A] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100" />
@@ -419,7 +517,7 @@ function ServiceRow({
             <ArrowUpRight className="h-10 w-10 text-[#F2F7F5] transition-all duration-300 group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:text-[#0A1212]" />
           </div>
         </div>
-      </a>
+      </Link>
     </Reveal>
   );
 }
@@ -1039,16 +1137,19 @@ function Footer() {
           <Logo className="h-5" />
           <span>© 2026 — Luxembourg</span>
         </span>
-        <div className="flex gap-8">
-          <a href="#services" className="transition-colors hover:text-[#1FCE8A]">
-            Services
-          </a>
-          <a href="#blog" className="transition-colors hover:text-[#1FCE8A]">
-            Blog
-          </a>
-          <a href="#contact" className="transition-colors hover:text-[#1FCE8A]">
+        <div className="flex flex-wrap gap-x-8 gap-y-2">
+          <Link to="/creation-site-web" className="transition-colors hover:text-[#1FCE8A]">
+            Création
+          </Link>
+          <Link to="/seo-geo" className="transition-colors hover:text-[#1FCE8A]">
+            SEO & GEO
+          </Link>
+          <Link to="/communication" className="transition-colors hover:text-[#1FCE8A]">
+            Communication
+          </Link>
+          <Link to="/#contact" className="transition-colors hover:text-[#1FCE8A]">
             Contact
-          </a>
+          </Link>
         </div>
         <span>FR / EN</span>
       </div>
@@ -1069,6 +1170,42 @@ function Footer() {
   );
 }
 
+/* ================= HOME ================= */
+function Home({ started }: { started: boolean }) {
+  return (
+    <main>
+      <Hero started={started} />
+      <Manifesto />
+      <Services />
+      <Stats />
+      <Process />
+      <Timeline />
+      <Work />
+      <Results />
+      <Why />
+      <Blog />
+      <Faq />
+      <Contact />
+    </main>
+  );
+}
+
+/* ================= SCROLL MANAGER ================= */
+function ScrollManager() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        window.setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 80);
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
+
 /* ================= APP ================= */
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -1076,29 +1213,25 @@ export default function App() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 25 });
 
   return (
-    <div className="grain relative min-h-screen bg-[#0A1212] text-[#F2F7F5]">
-      <Cursor />
-      <motion.div
-        className="fixed inset-x-0 top-0 z-[95] h-[3px] origin-left bg-[#1FCE8A]"
-        style={{ scaleX: progress }}
-      />
-      <AnimatePresence>{loading && <Preloader onDone={() => setLoading(false)} />}</AnimatePresence>
-      <Nav />
-      <main>
-        <Hero started={!loading} />
-        <Manifesto />
-        <Services />
-        <Stats />
-        <Process />
-        <Timeline />
-        <Work />
-        <Results />
-        <Why />
-        <Blog />
-        <Faq />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="grain relative min-h-screen bg-[#0A1212] text-[#F2F7F5]">
+        <Cursor />
+        <motion.div
+          className="fixed inset-x-0 top-0 z-[95] h-[3px] origin-left bg-[#1FCE8A]"
+          style={{ scaleX: progress }}
+        />
+        <AnimatePresence>{loading && <Preloader onDone={() => setLoading(false)} />}</AnimatePresence>
+        <ScrollManager />
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Home started={!loading} />} />
+          <Route path="/creation-site-web" element={<Creation />} />
+          <Route path="/seo-geo" element={<SeoGeo />} />
+          <Route path="/communication" element={<Communication />} />
+          <Route path="*" element={<Home started={!loading} />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
