@@ -2,10 +2,81 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ArrowUpRight, Plus, Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Magnetic, Reveal, MaskedLine } from "./fx";
+import { Magnetic, Reveal, MaskedLine, Marquee } from "./fx";
 
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
+
+
+/* ---------- Texte "scramble" (décodage) ---------- */
+export function ScrambleText({ text, className = "" }: { text: string; className?: string }) {
+  const { ref, seen } = useSeen("-40px");
+  const [out, setOut] = useState(text);
+  useEffect(() => {
+    if (!seen) return;
+    const chars = "#%&@$AKXZRW";
+    let frame = 0;
+    const total = Math.max(18, text.length * 2);
+    const iv = window.setInterval(() => {
+      frame++;
+      const reveal = Math.floor((frame / total) * text.length);
+      setOut(
+        text
+          .split("")
+          .map((c, i) => (c === " " ? " " : i <= reveal ? c : chars[Math.floor(Math.random() * chars.length)]))
+          .join("")
+      );
+      if (frame >= total) {
+        setOut(text);
+        clearInterval(iv);
+      }
+    }, 35);
+    return () => clearInterval(iv);
+  }, [seen, text]);
+  return (
+    <span ref={ref as never} className={className}>
+      {out}
+    </span>
+  );
+}
+
+/* ---------- Coins "viseur" ---------- */
+export function Corners() {
+  return (
+    <>
+      {["-top-[5px] -left-[5px]", "-top-[5px] -right-[5px]", "-bottom-[5px] -left-[5px]", "-bottom-[5px] -right-[5px]"].map(
+        (pos) => (
+          <span
+            key={pos}
+            aria-hidden
+            className={"pointer-events-none absolute z-10 select-none text-xs leading-none text-[#1FCE8A] " + pos}
+          >
+            +
+          </span>
+        )
+      )}
+    </>
+  );
+}
+
+/* ---------- Marquee de titre géant ---------- */
+export function GiantMarquee({ word }: { word: string }) {
+  return (
+    <section className="overflow-hidden border-t border-[#22302B] py-8 md:py-12">
+      <Marquee speed={30}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <span
+            key={i}
+            className="font-display mx-6 inline-flex items-center gap-10 text-7xl uppercase leading-none md:text-[9rem]"
+          >
+            <span className={i % 2 ? "text-stroke" : "text-[#F2F7F5]"}>{word}</span>
+            <span className="text-4xl text-[#1FCE8A] md:text-6xl">✦</span>
+          </span>
+        ))}
+      </Marquee>
+    </section>
+  );
+}
 
 /* ---------- Halos lumineux animés ---------- */
 export function Glow({ variant = 0 }: { variant?: number }) {
@@ -36,17 +107,41 @@ export function PageHero({
   title,
   intro,
   watermark,
+  number,
   children,
 }: {
   label: string;
   title: React.ReactNode;
   intro: string;
   watermark?: string;
+  number?: string;
   children?: React.ReactNode;
 }) {
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-32 md:px-12 md:pb-24 md:pt-44">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(242,247,245,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(242,247,245,0.035) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+          maskImage: "radial-gradient(ellipse 90% 70% at 40% 30%, black 30%, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(ellipse 90% 70% at 40% 30%, black 30%, transparent 75%)",
+        }}
+      />
       <Glow />
+      {number && (
+        <motion.span
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: EASE }}
+          aria-hidden
+          className="font-display pointer-events-none absolute bottom-6 right-6 select-none text-8xl leading-none text-[#1FCE8A]/15 md:right-12 md:text-[12rem]"
+        >
+          {number}
+        </motion.span>
+      )}
       {watermark && (
         <motion.div
           initial={{ opacity: 0, x: 80 }}
@@ -65,7 +160,7 @@ export function PageHero({
           className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-[#1FCE8A]"
         >
           <span className="h-[2px] w-10 bg-[#1FCE8A]" />
-          {label}
+          <ScrambleText text={label} />
         </motion.div>
         <h1 className="font-display mt-8 max-w-5xl text-5xl uppercase leading-[0.95] text-[#F2F7F5] md:text-[6.5vw]">
           <span className="block overflow-hidden">
@@ -131,11 +226,12 @@ export function OfferCard({
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         style={{ transformPerspective: 900 }}
         className={
-          "h-full border p-8 md:p-10 " +
+          "relative h-full border p-8 transition-[box-shadow,border-color] duration-500 hover:border-[#1FCE8A]/70 hover:shadow-[0_0_70px_rgba(31,206,138,0.18)] md:p-10 " +
           (accent ? "border-[#1FCE8A] bg-[#0E1F1A]" : "border-[#22302B] bg-[#101B18]")
         }
         data-hover
       >
+        <Corners />
         <span
           className={
             "inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] " +
