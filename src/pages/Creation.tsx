@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useScroll, useTransform } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer2 } from "lucide-react";
 import { PageHero, OfferCard, Checklist, Steps, FaqList, CtaBand, GiantMarquee, EASE, useSeen } from "../pagefx";
@@ -164,6 +165,67 @@ const SITE_TYPES = [
 ];
 
 function SiteTypes() {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+  }, []);
+  return isDesktop ? <SiteTypesHorizontal /> : <SiteTypesGrid />;
+}
+
+/* Version desktop : le scroll vertical fait défiler les cartes horizontalement */
+function SiteTypesHorizontal() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const x = useTransform(scrollYProgress, [0.08, 0.92], ["4%", "-52%"]);
+
+  return (
+    <section ref={ref} className="relative h-[280vh]">
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="flex items-end justify-between px-12">
+          <h2 className="font-display text-4xl uppercase text-[#F2F7F5] md:text-6xl">
+            Pour chaque type de projet
+          </h2>
+          <span className="hidden text-xs uppercase tracking-[0.3em] text-[#8FA39C] md:block">
+            Scrollez ↓ pour explorer →
+          </span>
+        </div>
+        <motion.div style={{ x }} className="mt-12 flex gap-8 pl-12">
+          {SITE_TYPES.map((st, i) => (
+            <div
+              key={st.t}
+              className="group relative w-[46vw] shrink-0 overflow-hidden border border-[#22302B]"
+              data-hover
+            >
+              <div className="overflow-hidden">
+                <img
+                  src={st.img}
+                  alt={st.t}
+                  className="h-[52vh] w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A1212] via-[#0A1212]/25 to-transparent" />
+              <span className="font-display absolute right-6 top-4 text-7xl text-[#F2F7F5]/20">
+                0{i + 1}
+              </span>
+              <div className="absolute inset-x-0 bottom-0 p-8">
+                <span className="font-display text-4xl uppercase text-[#F2F7F5]">{st.t}</span>
+                <p className="mt-2 max-w-md leading-relaxed text-[#8FA39C]">{st.d}</p>
+              </div>
+            </div>
+          ))}
+          <div className="flex w-[30vw] shrink-0 items-center justify-center">
+            <span className="font-display text-stroke select-none text-6xl uppercase">
+              Et le vôtre ?
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* Version mobile : grille classique */
+function SiteTypesGrid() {
   return (
     <section className="px-6 py-16 md:px-12 md:py-24">
       <MaskedLine>
@@ -179,7 +241,6 @@ function SiteTypes() {
                 <img
                   src={st.img}
                   alt={st.t}
-                 
                   className="h-56 w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 md:h-64"
                 />
               </div>
@@ -188,11 +249,9 @@ function SiteTypes() {
                 <span className="font-display text-2xl uppercase text-[#F2F7F5] md:text-3xl">
                   {st.t}
                 </span>
-                <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#8FA39C] opacity-0 transition-all duration-500 group-hover:opacity-100">
-                  {st.d}
-                </p>
+                <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#8FA39C]">{st.d}</p>
               </div>
-              <span className="absolute right-4 top-4 bg-[#1FCE8A] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0A1212] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+              <span className="absolute right-4 top-4 bg-[#1FCE8A] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#0A1212]">
                 0{i + 1}
               </span>
             </div>
