@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer2 } from "lucide-react";
-import { PageHero, OfferCard, Checklist, Steps, FaqList, CtaBand, EASE, useSeen } from "../pagefx";
+import { PageHero, OfferCard, Checklist, Steps, FaqList, CtaBand, GiantMarquee, EASE, useSeen } from "../pagefx";
 import { Reveal, MaskedLine, Marquee } from "../fx";
 
 /* ============ Démo : le site qui se construit tout seul ============ */
@@ -248,6 +248,7 @@ export default function Creation() {
       <PageHero
         label="Création de site web"
         watermark="Sites"
+        number="01"
         title={
           <>
             Un site qui vous ressemble,{" "}
@@ -345,6 +346,8 @@ export default function Creation() {
           },
         ]}
       />
+
+      <GiantMarquee word="Création" />
 
       <CtaBand
         title="Un projet de site web en tête ?"

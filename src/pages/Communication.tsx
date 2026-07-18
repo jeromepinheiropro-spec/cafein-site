@@ -9,7 +9,7 @@ import {
   Target,
   CalendarDays,
 } from "lucide-react";
-import { PageHero, FaqList, CtaBand, useSeen } from "../pagefx";
+import { PageHero, FaqList, CtaBand, GiantMarquee, useSeen } from "../pagefx";
 import { Reveal, MaskedLine, Marquee } from "../fx";
 
 /* ============ Démo : feed social vivant ============ */
@@ -274,6 +274,7 @@ export default function Communication() {
       <PageHero
         label="Communication digitale"
         watermark="Social"
+        number="03"
         title={
           <>
             Une marque qui <span className="text-[#1FCE8A]">rayonne</span> sur tous les canaux
@@ -318,6 +319,8 @@ export default function Communication() {
           },
         ]}
       />
+
+      <GiantMarquee word="Social media" />
 
       <CtaBand
         title="Votre marque mérite d'être vue"

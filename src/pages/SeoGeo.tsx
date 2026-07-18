@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, TrendingUp, Gauge, Quote } from "lucide-react";
-import { PageHero, OfferCard, FaqList, CtaBand, useTypewriter, useSeen } from "../pagefx";
+import { PageHero, OfferCard, FaqList, CtaBand, GiantMarquee, useTypewriter, useSeen } from "../pagefx";
 import { Reveal, MaskedLine, CountUp } from "../fx";
 
 /* ============ Démo : recherche Google avec Cafein en tête ============ */
@@ -29,13 +29,14 @@ function SearchDemo() {
             />
           </span>
         </div>
+        <div className="mt-4 min-h-[252px]">
         <AnimatePresence>
           {seen && done && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mt-4 space-y-3"
+              className="space-y-3"
             >
               <div className="border border-[#1FCE8A] bg-[#0E1F1A] p-4">
                 <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#1FCE8A]">
@@ -58,6 +59,7 @@ function SearchDemo() {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
       </div>
     </div>
   );
@@ -114,7 +116,7 @@ function AiChatDemo() {
         <div className="ml-auto max-w-[85%] border border-[#32423C] bg-[#0A1212] px-4 py-3 text-sm text-[#F2F7F5]">
           Quelle agence web recommandes-tu au Luxembourg ?
         </div>
-        <div className="min-h-[7rem] max-w-[92%]">
+        <div className="min-h-[11.5rem] max-w-[92%]">
           {phase === 1 && (
             <div className="inline-flex gap-1.5 border border-[#22302B] px-4 py-3">
               {[0, 1, 2].map((i) => (
@@ -231,6 +233,7 @@ export default function SeoGeo() {
       <PageHero
         label="SEO & GEO"
         watermark="Rank #1"
+        number="02"
         title={
           <>
             Être trouvé, par Google <span className="text-[#1FCE8A]">comme par les IA</span>
@@ -313,6 +316,8 @@ export default function SeoGeo() {
           },
         ]}
       />
+
+      <GiantMarquee word="SEO & GEO" />
 
       <CtaBand
         title="Envie d'améliorer votre visibilité ?"
