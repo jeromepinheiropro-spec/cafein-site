@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TERMES, CATS, groupByLetter, type Terme } from "../lexique-data";
@@ -16,11 +16,9 @@ const norm = (s: string) =>
 function TermeCard({ t, i }: { t: Terme; i: number }) {
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.45, delay: Math.min(i * 0.03, 0.3), ease: EASE }}
+      transition={{ duration: 0.3, delay: Math.min(i * 0.015, 0.12), ease: EASE }}
     >
       <Link
         to={`/lexique/${t.slug}`}
@@ -173,11 +171,9 @@ function Glossaire() {
               <span className="h-px flex-1 bg-[#22302B]" />
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <AnimatePresence mode="popLayout">
-                {groups[l].map((t, i) => (
-                  <TermeCard key={t.slug} t={t} i={i} />
-                ))}
-              </AnimatePresence>
+              {groups[l].map((t, i) => (
+                <TermeCard key={t.slug} t={t} i={i} />
+              ))}
             </div>
           </div>
         ))}
