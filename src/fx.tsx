@@ -221,18 +221,18 @@ export function Marquee({
   reverse?: boolean;
 }) {
   const reduced = useReducedMotion();
+  // Animation CSS pure : tourne sur le compositeur (GPU), zéro JavaScript par frame.
   return (
     <div className={"overflow-hidden whitespace-nowrap " + className}>
-      <motion.div
-        className="inline-flex will-change-transform"
-        animate={reduced ? undefined : { x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
-        transition={{ duration: speed, ease: "linear", repeat: Infinity }}
+      <div
+        className={"inline-flex will-change-transform " + (reduced ? "" : "marquee-track")}
+        style={reduced ? undefined : { animationDuration: `${speed}s`, animationDirection: reverse ? "reverse" : "normal" }}
       >
         <div className="inline-flex shrink-0">{children}</div>
         <div className="inline-flex shrink-0" aria-hidden>
           {children}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

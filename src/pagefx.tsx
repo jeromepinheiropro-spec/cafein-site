@@ -86,24 +86,18 @@ export function GiantMarquee({ word }: { word: string }) {
   );
 }
 
-/* ---------- Halos lumineux animés ---------- */
+/* ---------- Halos lumineux animés (CSS pur : compositeur GPU, zéro JS/frame) ---------- */
 export function Glow({ variant = 0 }: { variant?: number }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <motion.div
-        animate={{ x: [0, 60, -40, 0], y: [0, -50, 30, 0] }}
-        transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }}
-        className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#1FCE8A]/[0.14] blur-[110px]"
+      <div className="glow-a absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#1FCE8A]/[0.14] blur-[110px]" />
+      <div
+        className="glow-b absolute right-[-140px] top-1/4 h-[380px] w-[380px] rounded-full bg-[#0A9A62]/[0.13] blur-[100px]"
+        style={{ animationDelay: `${variant}s` }}
       />
-      <motion.div
-        animate={{ x: [0, -70, 40, 0], y: [0, 40, -40, 0] }}
-        transition={{ repeat: Infinity, duration: 22, ease: "easeInOut", delay: variant }}
-        className="absolute right-[-140px] top-1/4 h-[380px] w-[380px] rounded-full bg-[#0A9A62]/[0.13] blur-[100px]"
-      />
-      <motion.div
-        animate={{ x: [0, 50, -30, 0], y: [0, -30, 50, 0] }}
-        transition={{ repeat: Infinity, duration: 26, ease: "easeInOut", delay: variant * 2 }}
-        className="absolute bottom-[-160px] left-1/3 h-[360px] w-[360px] rounded-full bg-[#F2F7F5]/[0.05] blur-[120px]"
+      <div
+        className="glow-c absolute bottom-[-160px] left-1/3 h-[360px] w-[360px] rounded-full bg-[#F2F7F5]/[0.05] blur-[120px]"
+        style={{ animationDelay: `${variant * 2}s` }}
       />
     </div>
   );

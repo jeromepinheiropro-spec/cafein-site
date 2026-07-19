@@ -125,3 +125,32 @@
   content-visibility: auto;
   contain-intrinsic-size: auto 700px;
 }
+
+/* Marquee CSS pur (compositeur GPU) */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee-x linear infinite;
+}
+
+/* Halos Glow en CSS pur */
+@keyframes glow-a {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(60px, -50px); }
+  66% { transform: translate(-40px, 30px); }
+}
+@keyframes glow-b {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-70px, 40px); }
+  66% { transform: translate(40px, -40px); }
+}
+@keyframes glow-c {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(50px, -30px); }
+  66% { transform: translate(-30px, 50px); }
+}
+.glow-a { animation: glow-a 18s ease-in-out infinite; }
+.glow-b { animation: glow-b 22s ease-in-out infinite; }
+.glow-c { animation: glow-c 26s ease-in-out infinite; }
