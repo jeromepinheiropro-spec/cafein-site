@@ -91,7 +91,7 @@ export function Glow({ variant = 0 }: { variant?: number }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <motion.div
-        animate={{ x: [0, 60, -40, 0], y: [0, -50, 30, 0], scale: [1, 1.15, 0.95, 1] }}
+        animate={{ x: [0, 60, -40, 0], y: [0, -50, 30, 0] }}
         transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }}
         className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#1FCE8A]/[0.14] blur-[110px]"
       />

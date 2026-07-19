@@ -6,7 +6,6 @@ import {
   useTransform,
   useSpring,
   useReducedMotion,
-  useMotionValueEvent,
   type MotionValue,
 } from "framer-motion";
 import {
@@ -263,33 +262,16 @@ function Hero({ started }: { started: boolean }) {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
 
-  // Fondu à verrou : une fois masqué, ne réapparaît qu'après un vrai retour en haut
-  // (les sauts de mesure iOS lors de la rétraction de la barre d'adresse sont ignorés)
-  const [hidden, setHidden] = useState(false);
+  // Fondu symétrique : lié aux pixels scrollés (window.scrollY), donc réversible
+  // dans les deux sens et stable sur iOS (indépendant de la hauteur du viewport
+  // qui change quand la barre d'adresse Safari se rétracte).
+  const { scrollY } = useScroll();
+  const fade = useTransform(scrollY, [60, 460], [1, 0]);
+
   const [isDesktop, setIsDesktop] = useState(false);
-  const unhideTimer = useRef<number | null>(null);
   useEffect(() => {
     setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
   }, []);
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (v > 0.22) {
-      if (unhideTimer.current) {
-        clearTimeout(unhideTimer.current);
-        unhideTimer.current = null;
-      }
-      setHidden(true);
-    } else if (v < 0.05) {
-      if (!unhideTimer.current) {
-        unhideTimer.current = window.setTimeout(() => {
-          unhideTimer.current = null;
-          setHidden(false);
-        }, 250);
-      }
-    } else if (unhideTimer.current) {
-      clearTimeout(unhideTimer.current);
-      unhideTimer.current = null;
-    }
-  });
 
   const letters = ["C", "a", "f", "e", "i", "n"];
 
@@ -297,9 +279,7 @@ function Hero({ started }: { started: boolean }) {
     <section ref={ref} id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
       <Embers />
       <motion.div
-        style={isDesktop ? { y, scale } : undefined}
-        animate={{ opacity: hidden ? 0 : 1 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
+        style={isDesktop ? { y, scale, opacity: fade } : { opacity: fade }}
         className="relative z-10 flex flex-1 flex-col justify-center px-6 pt-28 md:px-12"
       >
         <motion.div
@@ -1247,7 +1227,7 @@ function RouteCurtain() {
       return;
     }
     setShow(true);
-    const t = window.setTimeout(() => setShow(false), 600);
+    const t = window.setTimeout(() => setShow(false), 420);
     return () => clearTimeout(t);
   }, [pathname]);
   return (
@@ -1257,13 +1237,13 @@ function RouteCurtain() {
           initial={{ y: "100%" }}
           animate={{ y: "0%" }}
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.4, ease: EASE }}
+          transition={{ duration: 0.3, ease: EASE }}
           className="fixed inset-0 z-[150] flex items-center justify-center bg-[#1FCE8A]"
         >
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
+            transition={{ delay: 0.08, duration: 0.24 }}
           >
             <svg viewBox="0 0 30 41" className="h-14 w-auto" aria-hidden fill="none">
               <path d="M0 0.558716V23.2477C0 27.7947 1.72257 32.2022 4.91942 35.4301C5.29187 35.8026 5.69536 36.1751 6.12989 36.5475C10.801 40.4739 15.9222 40.8153 17.443 40.8618V18.3902C17.443 14.2466 16.0308 10.2116 13.315 7.07675C13.1909 6.93707 13.0823 6.81292 12.9581 6.67325C8.0542 1.35019 1.62946 0.66735 0 0.558716Z" fill="#0A1212"/>

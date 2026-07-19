@@ -288,7 +288,17 @@ export function Embers({ className = "" }: { className?: string }) {
       });
     };
 
+    // Pause complète quand le canvas est hors écran (économise CPU/GPU sur tout le reste de la page)
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => {
+      const was = visible;
+      visible = e.isIntersecting;
+      if (visible && !was) raf = requestAnimationFrame(tick);
+    });
+    io.observe(canvas);
+
     const tick = () => {
+      if (!visible) return;
       ctx.clearRect(0, 0, W, H);
       if (parts.length < 70 && Math.random() < 0.5) spawn();
       for (let i = parts.length - 1; i >= 0; i--) {
@@ -319,6 +329,7 @@ export function Embers({ className = "" }: { className?: string }) {
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, [reduced]);
