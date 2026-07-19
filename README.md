@@ -1,6 +1,8 @@
-# Cafein — Site vitrine
+# Cafein — Site vitrine v2 (showcase)
 
-Site one-page de l'agence Cafein (Luxembourg) — React + Vite + Tailwind + Framer Motion.
+Version 2 du site one-page de l'agence Cafein (Luxembourg) — React + Vite + Framer Motion + Lenis.
+
+Nouveautés v2 : cursor custom multi-états (anneau à ressort, traînée de particules, labels contextuels), préloader, kinetic typography avec parallaxe souris, champ de particules interactif, section méthode en scroll horizontal épinglé, marquee réactif à la vélocité du scroll, cartes tilt 3D, texte scramble, grain animé.
 
 ## Développement local
 
@@ -12,12 +14,10 @@ npm run dev
 ## Build
 
 ```bash
-npm run build     # génère dist/
+npm run build     # génère dist/ (index.html autonome + assets public/)
 npm run start     # sert dist/ (utilisé par Railway)
 ```
 
 ## Déploiement Railway
 
-Le fichier `railway.json` est déjà configuré : connecter ce repo GitHub dans Railway → New Project → Deploy from GitHub repo, et c'est tout.
-
-`bundle.html` à la racine est une version autonome du site (un seul fichier, ouvrable partout).
+`railway.json` est déjà configuré : Railway rebuild et redéploie automatiquement à chaque push sur la branche connectée.
