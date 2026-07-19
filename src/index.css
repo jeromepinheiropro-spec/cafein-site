@@ -111,3 +111,17 @@
 .vertical-rl {
   writing-mode: vertical-rl;
 }
+
+/* Lexique : entrée de carte en CSS pur (léger — pas de contrôleur JS par carte) */
+@keyframes lex-card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.lex-card {
+  animation: lex-card-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* Le navigateur ne rend que les groupes visibles à l'écran */
+.lex-group {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
