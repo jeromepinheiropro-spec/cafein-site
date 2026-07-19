@@ -154,3 +154,13 @@
 .glow-a { animation: glow-a 18s ease-in-out infinite; }
 .glow-b { animation: glow-b 22s ease-in-out infinite; }
 .glow-c { animation: glow-c 26s ease-in-out infinite; }
+
+/* Mobile : grain statique et calque 4x plus petit (les gros calques fixes sont très chers sur mobile) */
+@media (pointer: coarse) {
+  .grain::after {
+    animation: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

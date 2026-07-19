@@ -1226,6 +1226,8 @@ function RouteCurtain() {
       first.current = false;
       return;
     }
+    // Sur mobile : pas de rideau — navigation instantanée (ressenti app native)
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     setShow(true);
     const t = window.setTimeout(() => setShow(false), 420);
     return () => clearTimeout(t);
