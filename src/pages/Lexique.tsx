@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useDeferredValue, useMemo, useState } from "react";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TERMES, CATS, groupByLetter, type Terme } from "../lexique-data";
@@ -11,8 +11,8 @@ const norm = (s: string) =>
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase();
 
-/* ---------- Carte d'un terme (CSS pur — aucun contrôleur JS par carte) ---------- */
-function TermeCard({ t, i }: { t: Terme; i: number }) {
+/* ---------- Carte d'un terme (CSS pur + memo — aucun travail React si rien ne change) ---------- */
+const TermeCard = memo(function TermeCard({ t, i }: { t: Terme; i: number }) {
   return (
     <div className="lex-card" style={{ animationDelay: `${Math.min(i * 15, 120)}ms` }}>
       <Link
@@ -33,28 +33,32 @@ function TermeCard({ t, i }: { t: Terme; i: number }) {
       </Link>
     </div>
   );
-}
+});
 
 /* ---------- Liste + filtres ---------- */
 function Glossaire() {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState<string | null>(null);
   const [letter, setLetter] = useState<string | null>(null);
+  // La frappe met à jour l'input immédiatement ; le filtrage de la liste suit sans bloquer.
+  const deferredQuery = useDeferredValue(query);
 
   const filtered = useMemo(() => {
     let list = TERMES;
     if (cat) list = list.filter((t) => t.cat === cat);
-    if (query.trim()) {
-      const q = norm(query);
+    if (deferredQuery.trim()) {
+      const q = norm(deferredQuery);
       list = list.filter((t) => norm(t.term).includes(q) || norm(t.short).includes(q));
     }
     return list;
-  }, [query, cat]);
+  }, [deferredQuery, cat]);
 
   const groups = useMemo(() => groupByLetter(filtered), [filtered]);
   const allLetters = useMemo(() => Object.keys(groupByLetter(TERMES)), []);
   const activeLetters = Object.keys(groups);
-  const shownLetters = letter && activeLetters.includes(letter) ? [letter] : activeLetters;
+  // Le filtre par lettre masque/affiche en CSS (aucun montage/démontage React → instantané)
+  const isShown = (l: string) => !letter || l === letter;
+  const nothingShown = activeLetters.filter(isShown).length === 0;
 
   return (
     <section className="relative px-6 pb-24 md:px-12">
@@ -145,7 +149,7 @@ function Glossaire() {
 
       {/* Groupes par lettre */}
       <div className="mt-6 min-h-[40vh]">
-        {shownLetters.length === 0 && (
+        {nothingShown && (
           <div className="py-24 text-center">
             <p className="font-display text-3xl uppercase text-[#F2F7F5]">Aucun résultat</p>
             <p className="mt-3 text-[#8FA39C]">
@@ -157,8 +161,8 @@ function Glossaire() {
             </p>
           </div>
         )}
-        {shownLetters.map((l) => (
-          <div key={l} className="lex-group mt-14 first:mt-8">
+        {activeLetters.map((l) => (
+          <div key={l} className={"lex-group mt-14 first:mt-8" + (isShown(l) ? "" : " hidden")}>
             <div className="flex items-center gap-6">
               <span className="font-display text-stroke select-none text-6xl uppercase leading-none md:text-7xl">
                 {l}
