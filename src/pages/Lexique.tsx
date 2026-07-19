@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TERMES, CATS, groupByLetter, type Terme } from "../lexique-data";
-import { PageHero, Corners, GiantMarquee, CtaBand, EASE, usePageMeta } from "../pagefx";
+import { PageHero, Corners, GiantMarquee, CtaBand, usePageMeta } from "../pagefx";
 import { Reveal } from "../fx";
 
 const norm = (s: string) =>
@@ -12,31 +11,27 @@ const norm = (s: string) =>
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase();
 
-/* ---------- Carte d'un terme ---------- */
+/* ---------- Carte d'un terme (CSS pur — aucun contrôleur JS par carte) ---------- */
 function TermeCard({ t, i }: { t: Terme; i: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: Math.min(i * 0.015, 0.12), ease: EASE }}
-    >
+    <div className="lex-card" style={{ animationDelay: `${Math.min(i * 15, 120)}ms` }}>
       <Link
         to={`/lexique/${t.slug}`}
-        className="group relative block h-full border border-[#22302B] bg-[#101B18] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#1FCE8A]/60 hover:shadow-[0_0_50px_rgba(31,206,138,0.12)]"
+        className="group relative block h-full border border-[#22302B] bg-[#101B18] p-6 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-[#1FCE8A]/60"
       >
         <Corners />
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-display text-xl uppercase leading-tight text-[#F2F7F5] transition-colors duration-300 group-hover:text-[#1FCE8A]">
             {t.term}
           </h3>
-          <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-[#8FA39C] transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#1FCE8A]" />
+          <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-[#8FA39C] transition-[color,transform] duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#1FCE8A]" />
         </div>
         <p className="mt-3 text-sm leading-relaxed text-[#8FA39C]">{t.short}</p>
         <span className="mt-4 inline-block border border-[#22302B] px-2.5 py-1 text-[10px] uppercase tracking-[0.25em] text-[#8FA39C] transition-colors duration-300 group-hover:border-[#1FCE8A]/40 group-hover:text-[#1FCE8A]">
           {t.cat}
         </span>
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
@@ -64,7 +59,7 @@ function Glossaire() {
   return (
     <section className="relative px-6 pb-24 md:px-12">
       {/* Recherche + filtres */}
-      <div className="sticky top-0 z-40 -mx-6 border-b border-[#22302B] bg-[#0A1212]/90 px-6 py-5 backdrop-blur-md md:-mx-12 md:px-12">
+      <div className="sticky top-0 z-40 -mx-6 border-b border-[#22302B] bg-[#0A1212]/[0.97] px-6 py-5 md:-mx-12 md:px-12">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-sm">
             <Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8FA39C]" />
@@ -163,7 +158,7 @@ function Glossaire() {
           </div>
         )}
         {shownLetters.map((l) => (
-          <div key={l} className="mt-14 first:mt-8">
+          <div key={l} className="lex-group mt-14 first:mt-8">
             <div className="flex items-center gap-6">
               <span className="font-display text-stroke select-none text-6xl uppercase leading-none md:text-7xl">
                 {l}
