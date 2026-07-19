@@ -1,4 +1,4 @@
-import { memo, useDeferredValue, useMemo, useState } from "react";
+import { memo, startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TERMES, CATS, groupByLetter, type Terme } from "../lexique-data";
@@ -10,6 +10,16 @@ const norm = (s: string) =>
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase();
+
+/* ---------- Monte ses enfants juste après le premier affichage (sections sous la ligne de flottaison) ---------- */
+function AfterMount({ children }: { children: React.ReactNode }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => startTransition(() => setReady(true)), 80);
+    return () => clearTimeout(id);
+  }, []);
+  return ready ? <>{children}</> : null;
+}
 
 /* ---------- Carte d'un terme (CSS pur + memo — aucun travail React si rien ne change) ---------- */
 const TermeCard = memo(function TermeCard({ t, i }: { t: Terme; i: number }) {
@@ -59,6 +69,15 @@ function Glossaire() {
   // Le filtre par lettre masque/affiche en CSS (aucun montage/démontage React → instantané)
   const isShown = (l: string) => !letter || l === letter;
   const nothingShown = activeLetters.filter(isShown).length === 0;
+
+  // Rendu progressif : à l'arrivée sur la page, seuls les premiers groupes sont montés
+  // (affichage immédiat sur mobile) ; le reste se monte juste après, sans bloquer.
+  const [full, setFull] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => startTransition(() => setFull(true)), 40);
+    return () => clearTimeout(id);
+  }, []);
+  const renderLetters = full ? activeLetters : activeLetters.slice(0, 3);
 
   return (
     <section className="relative px-6 pb-24 md:px-12">
@@ -161,7 +180,7 @@ function Glossaire() {
             </p>
           </div>
         )}
-        {activeLetters.map((l) => (
+        {renderLetters.map((l) => (
           <div key={l} className={"lex-group mt-14 first:mt-8" + (isShown(l) ? "" : " hidden")}>
             <div className="flex items-center gap-6">
               <span className="font-display text-stroke select-none text-6xl uppercase leading-none md:text-7xl">
@@ -234,13 +253,15 @@ export default function Lexique() {
         number="04"
       />
       <Glossaire />
-      <Pourquoi />
-      <GiantMarquee word="Lexique" />
-      <CtaBand
-        title="Un terme vous échappe encore ?"
-        sub="Posez-nous la question — ou confiez-nous carrément le sujet."
-        button="Parlons-en"
-      />
+      <AfterMount>
+        <Pourquoi />
+        <GiantMarquee word="Lexique" />
+        <CtaBand
+          title="Un terme vous échappe encore ?"
+          sub="Posez-nous la question — ou confiez-nous carrément le sujet."
+          button="Parlons-en"
+        />
+      </AfterMount>
     </main>
   );
 }
